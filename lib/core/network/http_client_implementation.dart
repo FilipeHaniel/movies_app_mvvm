@@ -1,11 +1,22 @@
 import 'package:dio/dio.dart';
+import 'package:movies_app_mvvm/core/config/api_config.dart';
 import 'package:movies_app_mvvm/core/errors/failures.dart';
 import 'package:movies_app_mvvm/core/network/http_client.dart';
 
-class HttpClientImpl implements IHttpClient {
-  final Dio dio;
+class HttpClientImpl implements HttpClient {
+  final Dio _dio;
 
-  HttpClientImpl({required this.dio});
+  HttpClientImpl({Dio? dio})
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: ApiConfig.baseUrl,
+              headers: ApiConfig.defaultHeaders,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 10),
+            ),
+          );
 
   @override
   Future<HttpResponse> get(
@@ -14,7 +25,7 @@ class HttpClientImpl implements IHttpClient {
     Map<String, String>? headers,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         path,
         queryParameters: queryParameters,
         options: Options(headers: headers),

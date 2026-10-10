@@ -1,4 +1,4 @@
-abstract class IHttpClient {
+abstract class HttpClient {
   Future<HttpResponse> get(
     String url, {
     Map<String, String>? headers,
